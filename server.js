@@ -1,38 +1,39 @@
 const express = require("express");
-const cors = require("cors");
 const app = express();
 
-app.use(cors());
-app.use(express.static("public"));
+// Enable CORS for FCC testing
+const cors = require("cors");
+app.use(cors({ optionsSuccessStatus: 200 }));
 
+// Root route
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/public/index.html");
+  res.send("Timestamp Microservice is running");
 });
 
-app.get("/api/timestamp", (req, res) => {
-  const now = new Date();
-  res.json({ unix: now.getTime(), utc: now.toUTCString() });
-});
+// API route
+app.get("/api/:date?", (req, res) => {
+  let dateParam = req.params.date;
 
-app.get("/api/timestamp/:date", (req, res) => {
-  const dateParam = req.params.date;
+  // If no date provided, use current date
+  let date = dateParam ? new Date(dateParam) : new Date();
 
-  let dateObj;
-  if (/^\d+$/.test(dateParam)) {
-    const intVal = Number(dateParam);
-    dateObj = new Date(intVal);
-  } else {
-    dateObj = new Date(dateParam);
+  // If dateParam is a number string (unix timestamp), parse it as int
+  if (dateParam && /^\d+$/.test(dateParam)) {
+    date = new Date(parseInt(dateParam));
   }
 
-  if (dateObj.toString() === "Invalid Date") {
+  if (date.toString() === "Invalid Date") {
     return res.json({ error: "Invalid Date" });
   }
 
-  res.json({ unix: dateObj.getTime(), utc: dateObj.toUTCString() });
+  res.json({
+    unix: date.getTime(),
+    utc: date.toUTCString(),
+  });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Timestamp Microservice running on port ${PORT}`);
+// Listen on port
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`);
 });
