@@ -1,29 +1,22 @@
-const express = require("express");
-const serverless = require("serverless-http");
+export default function handler(req, res) {
+  const { date } = req.query; // Vercel exposes path/query differently
 
-const app = express();
+  let dateObj;
 
-app.get("/api/:date?", (req, res) => {
-  let dateParam = req.params.date;
-  let date;
-
-  if (!dateParam) {
-    date = new Date();
-  } else if (!isNaN(dateParam)) {
-    date = new Date(parseInt(dateParam));
+  if (!date) {
+    dateObj = new Date();
+  } else if (/^\d+$/.test(date)) {
+    dateObj = new Date(parseInt(date));
   } else {
-    date = new Date(dateParam);
+    dateObj = new Date(date);
   }
 
-  if (date.toString() === "Invalid Date") {
+  if (dateObj.toString() === "Invalid Date") {
     return res.json({ error: "Invalid Date" });
   }
 
-  res.json({
-    unix: date.getTime(),
-    utc: date.toUTCString(),
+  return res.json({
+    unix: dateObj.getTime(),
+    utc: dateObj.toUTCString()
   });
-});
-
-module.exports = app;
-module.exports.handler = serverless(app);
+}
