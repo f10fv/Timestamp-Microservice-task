@@ -1,44 +1,44 @@
-// API endpoint simulation
-function timestampAPI(dateString) {
+// Updated script.js to use real API endpoints
+async function timestampAPI(dateString) {
     try {
-        let date;
+        let url;
         
-        // If no date string provided, return current time
+        // Determine the API endpoint
         if (!dateString || dateString.trim() === '') {
-            date = new Date();
+            url = '/api/';
         } else {
-            // Check if it's a Unix timestamp (all digits)
-            if (/^\d+$/.test(dateString.trim())) {
-                const timestamp = parseInt(dateString.trim());
-                date = new Date(timestamp);
-            } else {
-                // Try to parse as date string
-                date = new Date(dateString.trim());
-            }
+            url = `/api/${encodeURIComponent(dateString.trim())}`;
         }
 
-        // Check if the date is valid
-        if (isNaN(date.getTime())) {
-            return { error: "Invalid Date" };
-        }
-
-        return {
-            unix: date.getTime(),
-            utc: date.toUTCString()
-        };
+        // Make the API request
+        const response = await fetch(url);
+        const result = await response.json();
+        
+        return result;
     } catch (error) {
         return { error: "Invalid Date" };
     }
 }
 
-function testAPI(predefinedValue) {
+async function testAPI(predefinedValue) {
     const input = predefinedValue !== undefined ? predefinedValue : document.getElementById('dateInput').value;
-    const result = timestampAPI(input);
+    
+    // Show loading state
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = 'Loading...';
+    resultDiv.className = 'result';
+    
+    const result = await timestampAPI(input);
     displayResult(result);
 }
 
-function getCurrentTime() {
-    const result = timestampAPI('');
+async function getCurrentTime() {
+    // Show loading state
+    const resultDiv = document.getElementById('result');
+    resultDiv.innerHTML = 'Loading...';
+    resultDiv.className = 'result';
+    
+    const result = await timestampAPI('');
     displayResult(result);
     document.getElementById('dateInput').value = '';
 }
