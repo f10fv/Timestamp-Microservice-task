@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timestamp Microservice</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📅 Timestamp Microservice</h1>
+        <p class="subtitle">Convert dates to Unix timestamps and UTC strings</p>
+        
+        <div class="api-section">
+            <div class="example-usage">
+                <h3>📋 API Usage Examples</h3>
+                <p><strong>Current timestamp:</strong></p>
+                <div class="example-url" onclick="testAPI('')">/api/</div>
+                
+                <p><strong>Unix timestamp:</strong></p>
+                <div class="example-url" onclick="testAPI('1451001600000')">/api/1451001600000</div>
+                
+                <p><strong>Date string:</strong></p>
+                <div class="example-url" onclick="testAPI('2015-12-25')">/api/2015-12-25</div>
+                
+                <p><strong>Example Response:</strong></p>
+                <div class="example-response">{"unix": 1451001600000, "utc": "Fri, 25 Dec 2015 00:00:00 GMT"}</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>🧪 Test the API</h3>
+            <div class="input-group">
+                <label for="dateInput">Enter a date string or Unix timestamp:</label>
+                <input type="text" id="dateInput" placeholder="e.g., 2015-12-25, 1451001600000, or leave empty for current time">
+            </div>
+            <button class="btn" onclick="testAPI()">Get Timestamp</button>
+            <button class="btn" onclick="getCurrentTime()">Current Time</button>
+            <button class="btn" onclick="clearResult()">Clear</button>
+            <div id="result" class="result"></div>
+        </div>
+
+        <div class="footer">
+            <p>Built with vanilla JavaScript • Handles Unix timestamps and date strings</p>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
